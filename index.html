@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CHUNARYA | Custom Fashion</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Georgia, serif;
+    background: #faf6ef;
+    color: #34251f;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 8%;
+    background: #fffdf9;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 12px #00000010;
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    color: #98734d;
+}
+
+nav a {
+    text-decoration: none;
+    color: #34251f;
+    margin-left: 20px;
+    font-size: 14px;
+}
+
+nav a:hover {
+    color: #98734d;
+}
+
+.hero {
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 50px 20px;
+    background: linear-gradient(135deg, #f2e5d5, #fffaf3);
+}
+
+.hero h1 {
+    font-size: 65px;
+    letter-spacing: 8px;
+    color: #98734d;
+    margin-bottom: 20px;
+}
+
+.hero h2 {
+    font-size: 26px;
+    font-weight: normal;
+}
+
+.hero p {
+    max-width: 550px;
+    line-height: 1.8;
+    margin: 20px 0;
+}
+
+.btn {
+    display: inline-block;
+    padding: 14px 28px;
+    background: #98734d;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 15px;
+    transition: 0.3s;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.btn:hover {
+    background: #68482d;
+    transform: translateY(-3px);
+}
+
+section {
+    padding: 85px 8%;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 36px;
+    color: #98734d;
+    margin-bottom: 15px;
+}
+
+.subtitle {
+    color: #796b61;
+    margin-bottom: 35px;
+}
+
+.about {
+    max-width: 750px;
+    margin: auto;
+    line-height: 2;
+}
+
+.collections {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+.collection {
+    background: #fffdf9;
+    padding: 45px 15px;
+    border: 1px solid #e7d8c6;
+    transition: 0.3s;
+}
+
+.collection:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 25px #00000012;
+}
+
+.collection h3 {
+    color: #98734d;
+    margin-bottom: 12px;
+    font-size: 22px;
+}
+
+.collection p {
+    line-height: 1.7;
+    color: #796b61;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.step {
+    padding: 25px;
+    background: #f1e7da;
+    line-height: 1.8;
+}
+
+.step h3 {
+    color: #98734d;
+    margin-bottom: 12px;
+}
+
+.contact {
+    background: #eee1d2;
+}
+
+footer {
+    padding: 30px;
+    text-align: center;
+    background: #34251f;
+    color: white;
+    line-height: 2;
+}
+
+footer p {
+    color: #e5d7c9;
+}
+
+@media(max-width: 700px) {
+    nav {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    nav a {
+        margin: 5px;
+        font-size: 12px;
+    }
+
+    .hero h1 {
+        font-size: 40px;
+        letter-spacing: 4px;
+    }
+
+    .hero h2 {
+        font-size: 21px;
+    }
+
+    .collections,
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    section {
+        padding: 65px 6%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">CHUNARYA</div>
+
+    <div>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#collection">Collection</a>
+        <a href="#orders">Orders</a>
+        <a href="#contact">Contact</a>
+    </div>
+</nav>
+
+<section class="hero" id="home">
+
+    <h1>CHUNARYA</h1>
+
+    <h2>Elegance Made Just For You</h2>
+
+    <p>
+        Discover beautifully handcrafted bridal and
+        occasion wear, designed with love and made
+        especially for you.
+    </p>
+
+    <a href="#collection" class="btn">
+        Explore Our Collection
+    </a>
+
+</section>
+
+<section id="about">
+
+    <h2 class="section-title">Our Story</h2>
+
+    <p class="about">
+        Welcome to CHUNARYA, where every outfit is
+        created with creativity, care and attention
+        to detail. We specialize in custom-made
+        dresses for weddings and special occasions.
+        Your dream design, made especially for you.
+    </p>
+
+</section>
+
+<section id="collection">
+
+    <h2 class="section-title">Our Collection</h2>
+
+    <p class="subtitle">
+        Beautiful outfits for your special moments.
+    </p>
+
+    <div class="collections">
+
+        <div class="collection">
+            <h3>Bridal Wear</h3>
+            <p>Custom wedding dresses designed for your big day.</p>
+        </div>
+
+        <div class="collection">
+            <h3>Party Wear</h3>
+            <p>Elegant outfits for parties and celebrations.</p>
+        </div>
+
+        <div class="collection">
+            <h3>Engagement Wear</h3>
+            <p>Special designs for unforgettable moments.</p>
+        </div>
+
+        <div class="collection">
+            <h3>Mehndi Dresses</h3>
+            <p>Beautiful custom outfits for mehndi functions.</p>
+        </div>
+
+        <div class="collection">
+            <h3>Formal Wear</h3>
+            <p>Graceful designs for special events.</p>
+        </div>
+
+        <div class="collection">
+            <h3>Custom Designs</h3>
+            <p>Bring your ideas and let us create your outfit.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<section id="orders">
+
+    <h2 class="section-title">How To Order</h2>
+
+    <p class="subtitle">
+        Your dream outfit in three simple steps.
+    </p>
+
+    <div class="steps">
+
+        <div class="step">
+            <h3>01. Choose</h3>
+            Browse our collection and choose your style.
+        </div>
+
+        <div class="step">
+            <h3>02. Discuss</h3>
+            Contact us with your design and measurements.
+        </div>
+
+        <div class="step">
+            <h3>03. Create</h3>
+            Your custom outfit is made especially for you.
+        </div>
+
+    </div>
+
+</section>
+
+<section class="contact" id="contact">
+
+    <h2 class="section-title">Let's Create Your Dream Dress</h2>
+
+    <p>
+        Have a design in mind? Contact CHUNARYA
+        to discuss your custom order.
+    </p>
+
+    <a
+        class="btn"
+        href="https://wa.me/923001234567?text=Hello%20CHUNARYA!%20I%20want%20to%20discuss%20a%20custom%20dress."
+        target="_blank"
+        rel="noopener noreferrer">
+
+        Order On WhatsApp
+
+    </a>
+
+</section>
+
+<footer>
+
+    <h2>CHUNARYA</h2>
+
+    <p>Custom Bridal & Occasion Wear</p>
+
+    <p>Made With Love ❤️</p>
+
+    <p>© 2026 CHUNARYA. All Rights Reserved.</p>
+
+</footer>
+
+</body>
+</html>
