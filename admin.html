@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CHUNARYA Admin</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fbf7f0;color:#33251f;font-family:Arial,sans-serif}.wrap{max-width:760px;margin:35px auto;padding:18px}.brand{text-align:center;letter-spacing:5px;color:#76513d;font: bold 25px Georgia,serif;margin:20px}.panel{background:white;padding:25px;border:1px solid #eadfD2;margin:18px 0}h1,h2{font-family:Georgia,serif;font-weight:normal}label{display:block;font-size:13px;margin:14px 0 6px}input,select,textarea{width:100%;padding:12px;border:1px solid #d9cbbd;background:#fff;font-size:15px}textarea{min-height:85px}button,.linkbtn{background:#76513d;color:white;border:0;padding:12px 17px;cursor:pointer;margin-top:14px}button.secondary{background:#eee5dc;color:#33251f}.hidden{display:none}.msg{font-size:13px;color:#76513d;margin-top:12px;white-space:pre-wrap}.item{display:flex;gap:14px;align-items:center;border-top:1px solid #eee;padding:12px 0}.item img{width:65px;height:75px;object-fit:cover}.item div{flex:1}.item small{color:#796f68}@media(max-width:520px){.wrap{margin:10px auto;padding:12px}.panel{padding:17px}}
+</style></head><body><main class="wrap"><div class="brand">CHUNARYA</div><h1 style="text-align:center">Admin Dashboard</h1>
+<section class="panel" id="loginPanel"><h2>Admin login</h2><label>Email</label><input id="email" type="email" autocomplete="username"><label>Password</label><input id="password" type="password" autocomplete="current-password"><button id="loginBtn">Log in</button><div class="msg" id="loginMsg"></div></section>
+<section class="panel hidden" id="dashboard"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2>Your dresses</h2><button class="secondary" id="logoutBtn">Log out</button></div>
+<h2>Add a dress</h2><form id="productForm"><label>Dress name *</label><input id="name" required maxlength="100"><label>Price in PKR (optional)</label><input id="price" type="number" min="0" step="1"><label>Category *</label><select id="category" required><option value="Bridal">Bridal</option><option value="Festive">Festive</option><option value="Custom">Custom</option></select><label>Description (optional)</label><textarea id="description" maxlength="500"></textarea><label>Dress photo (JPG, PNG or WebP; max 5 MB) *</label><input id="photo" type="file" accept="image/jpeg,image/png,image/webp" required><button id="addBtn" type="submit">Upload dress</button><div class="msg" id="formMsg"></div></form>
+<h2>Published dresses</h2><div id="productList">Loading…</div></section></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const SUPABASE_URL="https://smeqsvpqcukmuwjicfqz.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_RmTOjy7KGByFx4AR3ze6yw_vD2OFMGn";
+const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const $=id=>document.getElementById(id);
+function message(id,text){$(id).textContent=text;}
+async function refreshSession(){
+ const {data:{session}}=await client.auth.getSession();
+ if(session){$("loginPanel").classList.add("hidden");$("dashboard").classList.remove("hidden");await loadList();}
+ else{$("loginPanel").classList.remove("hidden");$("dashboard").classList.add("hidden");}
+}
+$("loginBtn").onclick=async()=>{message("loginMsg","Signing in…");const {error}=await client.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});message("loginMsg",error?error.message:"Login successful.");if(!error)await refreshSession();};
+$("logoutBtn").onclick=async()=>{await client.auth.signOut();await refreshSession();};
+$("productForm").onsubmit=async e=>{
+ e.preventDefault();$("addBtn").disabled=true;message("formMsg","Uploading photo and saving dress…");
+ try{
+  const file=$("photo").files[0];if(!file)throw new Error("Choose a photo first.");
+  if(file.size>5*1024*1024)throw new Error("Photo must be 5 MB or smaller.");
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type))throw new Error("Use a JPG, PNG or WebP photo.");
+  const ext=file.type==="image/png"?"png":file.type==="image/webp"?"webp":"jpg";
+  const path=crypto.randomUUID()+"."+ext;
+  const {error:uploadError}=await client.storage.from("chunarya-dresses").upload(path,file,{contentType:file.type,upsert:false});
+  if(uploadError)throw uploadError;
+  const {data:{publicUrl}}=client.storage.from("chunarya-dresses").getPublicUrl(path);
+  const price=$("price").value===""?null:Number($("price").value);
+  const {error:insertError}=await client.from("products").insert({name:$("name").value.trim(),price,category:$("category").value,description:$("description").value.trim()||null,image_url:publicUrl});
+  if(insertError){await client.storage.from("chunarya-dresses").remove([path]);throw insertError;}
+  $("productForm").reset();message("formMsg","Dress added! It should now appear on the public website.");await loadList();
+ }catch(err){message("formMsg","Error: "+(err.message||"Something went wrong."));}
+ finally{$("addBtn").disabled=false;}
+};
+async function loadList(){
+ const root=$("productList");root.textContent="Loading…";
+ const {data,error}=await client.from("products").select("id,name,category,image_url").order("created_at",{ascending:false});
+ if(error){root.textContent="Could not load dresses: "+error.message;return;}
+ if(!data.length){root.textContent="No dresses added yet.";return;}
+ root.innerHTML="";
+ data.forEach(p=>{
+  const row=document.createElement("div");row.className="item";
+  const img=document.createElement("img");img.src=p.image_url;img.alt=p.name;
+  const info=document.createElement("div");const title=document.createElement("strong");title.textContent=p.name;const sub=document.createElement("small");sub.textContent=p.category;info.append(title,document.createElement("br"),sub);
+  const del=document.createElement("button");del.textContent="Delete";del.onclick=async()=>{if(!confirm("Delete "+p.name+"?"))return;const {error}=await client.from("products").delete().eq("id",p.id);if(error)alert(error.message);else await loadList();};
+  row.append(img,info,del);root.append(row);
+ });
+}
+client.auth.onAuthStateChange(()=>{setTimeout(refreshSession,0);});
+refreshSession();
+</script></body></html>
